@@ -33,4 +33,18 @@ public class JWTService {
 
         return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
     }
+
+    public String generateTokenFromUsername(String username) {
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))
+                .subject(username)
+                .build();
+
+        JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
+
+        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+    }
 }
