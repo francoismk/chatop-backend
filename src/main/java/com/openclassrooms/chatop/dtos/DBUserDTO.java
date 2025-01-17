@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DBUserDTO {
-    private Integer id;
-
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
