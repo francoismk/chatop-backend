@@ -38,4 +38,8 @@ public class UserService {
 
         return modelMapper.map(user, GetUserDTO.class);
     }
+
+    public boolean userExists(String username) {
+        return userRepository.findByUsername(username) != null;
+    }
 }
