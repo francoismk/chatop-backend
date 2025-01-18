@@ -7,25 +7,34 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "USERS")
-public class DBUser {
+@Table(name = "RENTALS")
+public class DBRental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "email")
-    private String email;
-
     @Column(name = "name")
-    private String username;
+    private String name;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "surface")
+    private Integer surface;
+
+    @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "picture")
+    private String picture;
+
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private DBUser owner_id;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -34,7 +43,4 @@ public class DBUser {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updated_at;
-
-    @OneToMany(mappedBy = "owner_id")
-    private List<DBRental> rentals;
 }
