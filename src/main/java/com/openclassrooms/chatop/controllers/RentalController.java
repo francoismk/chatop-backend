@@ -2,10 +2,14 @@ package com.openclassrooms.chatop.controllers;
 
 import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
+import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.services.RentalService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/rentals")
@@ -24,8 +28,8 @@ public class RentalController {
     }
 
     @GetMapping()
-    public ResponseEntity<GetRentalDTO> getRentals() {
-        GetRentalDTO rentals = rentalService.getRentals();
+    public ResponseEntity<List<GetRentalDTO>> getRentals() {
+        List<GetRentalDTO> rentals = rentalService.getRentals();
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
@@ -33,5 +37,11 @@ public class RentalController {
     public ResponseEntity<GetRentalDTO> getRentalById(@PathVariable Integer id) {
         GetRentalDTO rental = rentalService.getRentalById(id);
         return new ResponseEntity<>(rental, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateRentalById(@PathVariable Integer id, @RequestBody UpdateRentalDTO updateRentalDTO) {
+        rentalService.updateRentalById(id, updateRentalDTO);
+        return ResponseEntity.ok("Rental updated !");
     }
 }

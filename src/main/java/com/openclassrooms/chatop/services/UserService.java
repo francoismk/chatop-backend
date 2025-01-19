@@ -2,7 +2,10 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.DBUserDTO;
 import com.openclassrooms.chatop.dtos.GetUserDTO;
+import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
+import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
+import com.openclassrooms.chatop.repositories.DBRentalRepository;
 import com.openclassrooms.chatop.repositories.DBUserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private DBRentalRepository rentalRepository;
+
     public void saveUser(DBUserDTO userDTO) {
         DBUser user = modelMapper.map(userDTO, DBUser.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -42,4 +48,7 @@ public class UserService {
     public boolean userExists(String username) {
         return userRepository.findByUsername(username) != null;
     }
+
+
+
 }

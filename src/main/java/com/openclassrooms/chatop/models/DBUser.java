@@ -35,6 +35,6 @@ public class DBUser {
     @Column(name = "updated_at")
     private Date updated_at;
 
-    @OneToMany(mappedBy = "owner_id")
+    @OneToMany(mappedBy = "owner")
     private List<DBRental> rentals;
 }

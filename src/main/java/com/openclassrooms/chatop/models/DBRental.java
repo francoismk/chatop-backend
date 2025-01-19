@@ -34,7 +34,7 @@ public class DBRental {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private DBUser owner_id;
+    private DBUser owner;
 
     @CreationTimestamp
     @Column(name = "created_at")
