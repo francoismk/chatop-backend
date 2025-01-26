@@ -41,12 +41,25 @@ public class UserService {
         String username = jwt.getSubject();
 
         DBUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
 
         return modelMapper.map(user, GetUserDTO.class);
     }
 
     public boolean userExists(String username) {
-        return userRepository.findByUsername(username) != null;
+
+        DBUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User" + username + "not found");
+        }
+        return true;
+    }
+
+    public GetUserDTO getUserById(Integer id) {
+        DBUser user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return modelMapper.map(user, GetUserDTO.class);
     }
 
 

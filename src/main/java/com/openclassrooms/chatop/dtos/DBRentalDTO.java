@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.dtos;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class DBRentalDTO {
     private Integer price;
 
     @NotBlank(message = "picture is required")
-    private String picture;
+    private MultipartFile picture;
 
     @NotBlank(message = "description is required")
     private String description;

@@ -54,15 +54,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> getToken(@RequestBody LoginUserDTO request) {
+    public ResponseEntity<Map<String, String>> getToken(@RequestBody LoginUserDTO request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             String token = jwtService.generateToken(authentication);
-            return ResponseEntity.ok(token);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Bad credentials");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
