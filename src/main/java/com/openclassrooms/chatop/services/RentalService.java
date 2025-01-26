@@ -35,6 +35,9 @@ public class RentalService {
         String username = jwt.getSubject();
 
         DBUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
 
         DBRental rental = modelMapper.map(rentalDTO, DBRental.class);
         rental.setOwner(user);
@@ -43,6 +46,9 @@ public class RentalService {
 
     public List<GetRentalDTO> getRentals () {
         List<DBRental> rentals = rentalRepository.findAll();
+        if(rentals.isEmpty()) {
+            throw new IllegalArgumentException("No rentals found");
+        }
 
         return rentals.stream()
                 .map(rental -> {
@@ -53,7 +59,7 @@ public class RentalService {
     }
 
     public GetRentalDTO getRentalById (Integer id) {
-        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new RuntimeException("Rental not found"));
+        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rental with id " + id + " not found"));
 
         log.info("Rental found: " + rental);
         GetRentalDTO rentalDTO = modelMapper.map(rental, GetRentalDTO.class);
@@ -64,7 +70,7 @@ public class RentalService {
     }
 
     public DBRental updateRentalById(Integer id, UpdateRentalDTO updateRentalDto) {
-        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new RuntimeException("Rental not found"));
+        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rental with id " + id + " not found"));
 
         if (updateRentalDto.getName() != null) {
             rental.setName(updateRentalDto.getName());
