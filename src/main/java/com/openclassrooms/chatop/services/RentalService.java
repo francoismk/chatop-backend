@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.services;
 import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
+import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
 import com.openclassrooms.chatop.repositories.DBRentalRepository;
@@ -36,7 +37,7 @@ public class RentalService {
 
         DBUser user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         DBRental rental = modelMapper.map(rentalDTO, DBRental.class);
@@ -46,9 +47,6 @@ public class RentalService {
 
     public List<GetRentalDTO> getRentals () {
         List<DBRental> rentals = rentalRepository.findAll();
-        if(rentals.isEmpty()) {
-            throw new IllegalArgumentException("No rentals found");
-        }
 
         return rentals.stream()
                 .map(rental -> {
@@ -59,7 +57,7 @@ public class RentalService {
     }
 
     public GetRentalDTO getRentalById (Integer id) {
-        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rental with id " + id + " not found"));
+        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental with id " + id + " not found"));
 
         log.info("Rental found: " + rental);
         GetRentalDTO rentalDTO = modelMapper.map(rental, GetRentalDTO.class);
@@ -70,7 +68,7 @@ public class RentalService {
     }
 
     public DBRental updateRentalById(Integer id, UpdateRentalDTO updateRentalDto) {
-        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rental with id " + id + " not found"));
+        DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental with id " + id + " not found"));
 
         if (updateRentalDto.getName() != null) {
             rental.setName(updateRentalDto.getName());

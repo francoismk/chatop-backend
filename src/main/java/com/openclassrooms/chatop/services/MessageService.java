@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.services;
 import com.openclassrooms.chatop.dtos.DBMessageDTO;
 import com.openclassrooms.chatop.dtos.GetMessageDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
+import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.models.DBMessage;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
@@ -38,12 +39,12 @@ public class MessageService {
 
         DBUser user = dbUserRepository.findByUsername(username);
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         DBRental rental = dbRentalRepository.findById(messageDTO.getRental_id()).orElse(null);
         if (rental == null) {
-            throw new IllegalArgumentException("Rental not found");
+            throw new ResourceNotFoundException("Rental not found");
         }
 
         DBMessage message = modelMapper.map(messageDTO, DBMessage.class);
@@ -54,9 +55,6 @@ public class MessageService {
 
     public List<GetMessageDTO> getAllMessages() {
         List<DBMessage> messages = dbMessageRepository.findAll();
-        if (messages.isEmpty()) {
-            throw new IllegalArgumentException("No messages found");
-        }
 
         return messages.stream()
                 .map(message -> {
