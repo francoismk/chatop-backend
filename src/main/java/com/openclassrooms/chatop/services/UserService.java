@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.services;
 import com.openclassrooms.chatop.dtos.DBUserDTO;
 import com.openclassrooms.chatop.dtos.GetUserDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
+import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
 import com.openclassrooms.chatop.repositories.DBRentalRepository;
@@ -42,7 +43,7 @@ public class UserService {
 
         DBUser user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         return modelMapper.map(user, GetUserDTO.class);
@@ -52,13 +53,13 @@ public class UserService {
 
         DBUser user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new IllegalArgumentException("User" + username + "not found");
+            throw new IllegalArgumentException("User with username" + username + "not found");
         }
         return true;
     }
 
     public GetUserDTO getUserById(Integer id) {
-        DBUser user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        DBUser user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + "not found"));
         return modelMapper.map(user, GetUserDTO.class);
     }
 
