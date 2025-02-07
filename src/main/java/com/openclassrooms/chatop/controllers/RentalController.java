@@ -21,8 +21,8 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
-    @PostMapping()
-    public ResponseEntity<String> createRental(@RequestBody DBRentalDTO rentalDTO) {
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<String> createRental(@ModelAttribute DBRentalDTO rentalDTO) {
         rentalService.saveRental(rentalDTO);
         return ResponseEntity.ok("Rental created !");
     }

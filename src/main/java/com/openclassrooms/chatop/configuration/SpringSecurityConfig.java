@@ -45,7 +45,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()// Permettre l'accès sans authentification
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+                //.httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> {
                     jwtConfigurer.jwtAuthenticationConverter(new JwtAuthenticationConverter());
                 }))
