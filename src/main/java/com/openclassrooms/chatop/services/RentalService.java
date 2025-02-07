@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class RentalService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     public void saveRental(DBRentalDTO rentalDTO) {
 
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -40,8 +44,12 @@ public class RentalService {
             throw new ResourceNotFoundException("User not found");
         }
 
+        MultipartFile file = rentalDTO.getPicture();
+        String imageUrl = cloudinaryService.uploadFile(file, "rentals");
+
         DBRental rental = modelMapper.map(rentalDTO, DBRental.class);
         rental.setOwner(user);
+        rental.setPicture(imageUrl);
         rentalRepository.save(rental);
     }
 

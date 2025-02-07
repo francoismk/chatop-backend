@@ -67,6 +67,10 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Bad credentials");
+            // Return 401 Unauthorized via global exception handler
+            // retirer la logique du controller
+            // retirer le try/catch
+            // mettre en place bad exception handler
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
