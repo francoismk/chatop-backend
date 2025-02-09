@@ -1,7 +1,7 @@
 package com.openclassrooms.chatop.dtos;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,13 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DBUserDTO {
-    @NotBlank(message = "Email is required")
+    @NotNull(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "username is required")
-    private String username;
+    @NotNull(message = "name is required")
+    private String name;
 
-    @NotBlank(message = "password is required")
+    @NotNull(message = "password is required")
     private String password;
 }

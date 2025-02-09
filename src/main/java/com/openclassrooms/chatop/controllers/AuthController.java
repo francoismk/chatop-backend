@@ -3,7 +3,7 @@ package com.openclassrooms.chatop.controllers;
 import com.openclassrooms.chatop.dtos.DBUserDTO;
 import com.openclassrooms.chatop.dtos.GetUserDTO;
 import com.openclassrooms.chatop.dtos.LoginUserDTO;
-import com.openclassrooms.chatop.services.JWTService;
+import com.openclassrooms.chatop.services.AuthService;
 import com.openclassrooms.chatop.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,10 +11,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,28 +21,18 @@ import java.util.Map;
 @RequestMapping("api/auth")
 public class AuthController {
 
-    private final JWTService jwtService;
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    public AuthController (JWTService jwtService, UserService userService, AuthenticationManager authenticationManager) {
-        this.jwtService = jwtService;
+    public AuthController (UserService userService, AuthService authService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
+        this.authService = authService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>>createUser(@Valid @RequestBody DBUserDTO dbUserDTO) {
-        log.info("Received request to create user: {}", dbUserDTO);
 
-        if(userService.userExists(dbUserDTO.getUsername())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "User already exists");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-        userService.saveUser(dbUserDTO);
-
-        String token = jwtService.generateTokenFromUsername(dbUserDTO.getUsername());
+        String token = authService.registerAndGenerateToken(dbUserDTO);
 
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
@@ -55,24 +41,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> getToken(@RequestBody LoginUserDTO request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
-            String token = jwtService.generateToken(authentication);
+
+            String token = authService.AuthenticateAndGenerateToken(request);
 
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (BadCredentialsException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Bad credentials");
-            // Return 401 Unauthorized via global exception handler
-            // retirer la logique du controller
-            // retirer le try/catch
-            // mettre en place bad exception handler
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        }
     }
 
     @GetMapping("/me")

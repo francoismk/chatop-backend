@@ -12,7 +12,7 @@ import java.util.Date;
 public class GetUserDTO {
     private Integer id;
     private String email;
-    private String username;
+    private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private Date created_at;
