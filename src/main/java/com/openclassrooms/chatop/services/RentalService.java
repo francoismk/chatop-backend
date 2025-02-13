@@ -11,7 +11,6 @@ import com.openclassrooms.chatop.repositories.DBRentalRepository;
 import com.openclassrooms.chatop.repositories.DBUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -23,17 +22,17 @@ import java.util.List;
 @Service
 public class RentalService {
 
-    @Autowired
-    private DBRentalRepository rentalRepository;
+    private final DBRentalRepository rentalRepository;
+    private final DBUserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final CloudinaryService cloudinaryService;
 
-    @Autowired
-    private DBUserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
+    public RentalService(DBRentalRepository rentalRepository, DBUserRepository userRepository, ModelMapper modelMapper, CloudinaryService cloudinaryService) {
+        this.rentalRepository = rentalRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.cloudinaryService = cloudinaryService;
+    }
 
     public void saveRental(DBRentalDTO rentalDTO) {
 

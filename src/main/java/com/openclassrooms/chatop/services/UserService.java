@@ -5,10 +5,8 @@ import com.openclassrooms.chatop.dtos.GetUserDTO;
 import com.openclassrooms.chatop.errors.exceptions.UserAlreadyExistsException;
 import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBUser;
-import com.openclassrooms.chatop.repositories.DBRentalRepository;
 import com.openclassrooms.chatop.repositories.DBUserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -17,17 +15,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final DBUserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private DBUserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private DBRentalRepository rentalRepository;
+    public UserService(PasswordEncoder passwordEncoder, DBUserRepository userRepository, ModelMapper modelMapper) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public void createUser(DBUserDTO userDTO) {
 
@@ -46,7 +42,7 @@ public class UserService {
 
         DBUser user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException("User" + user.getName() + "not found");
+            throw new UserNotFoundException("User not found");
         }
 
         return modelMapper.map(user, GetUserDTO.class);
