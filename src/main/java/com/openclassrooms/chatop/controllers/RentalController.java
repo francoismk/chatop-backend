@@ -4,6 +4,7 @@ import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.services.RentalService;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class RentalController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> createRental(@ModelAttribute DBRentalDTO rentalDTO) {
+    public ResponseEntity<String> createRental(@Valid @ModelAttribute DBRentalDTO rentalDTO) {
         rentalService.saveRental(rentalDTO);
         return ResponseEntity.ok("Rental created !");
     }
@@ -39,8 +40,8 @@ public class RentalController {
         return new ResponseEntity<>(rental, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateRentalById(@PathVariable Integer id, @RequestBody UpdateRentalDTO updateRentalDTO) {
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<String> updateRentalById(@PathVariable Integer id, @Valid @ModelAttribute UpdateRentalDTO updateRentalDTO) {
         rentalService.updateRentalById(id, updateRentalDTO);
         return ResponseEntity.ok("Rental updated !");
     }

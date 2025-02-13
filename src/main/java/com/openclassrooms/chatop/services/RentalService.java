@@ -90,7 +90,11 @@ public class RentalService {
         }
 
         if (updateRentalDto.getPicture() != null) {
-            rental.setPicture(updateRentalDto.getPicture());
+
+            MultipartFile file = updateRentalDto.getPicture();
+            System.out.println("File: " + file);
+            String imageUrl = cloudinaryService.uploadFile(file, "rentals");
+            rental.setPicture(imageUrl);
         }
 
         if (updateRentalDto.getDescription() != null) {
