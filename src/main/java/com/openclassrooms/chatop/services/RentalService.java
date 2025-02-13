@@ -4,6 +4,7 @@ import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
+import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
 import com.openclassrooms.chatop.repositories.DBRentalRepository;
@@ -41,7 +42,7 @@ public class RentalService {
 
         DBUser userMail = userRepository.findByEmail(email);
         if (userMail == null) {
-            throw new ResourceNotFoundException("User with email" + email + "not found");
+            throw new UserNotFoundException("User with email" + email + "not found");
         }
 
         MultipartFile file = rentalDTO.getPicture();

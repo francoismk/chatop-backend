@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.services;
 import com.openclassrooms.chatop.dtos.DBMessageDTO;
 import com.openclassrooms.chatop.dtos.GetMessageDTO;
 import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
+import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBMessage;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
@@ -38,7 +39,7 @@ public class MessageService {
 
         DBUser userMail = dbUserRepository.findByName(email);
         if (userMail == null) {
-            throw new ResourceNotFoundException("User with email" + email + "not found");
+            throw new UserNotFoundException("User with email" + email + "not found");
         }
 
         DBRental rental = dbRentalRepository.findById(messageDTO.getRental_id()).orElse(null);

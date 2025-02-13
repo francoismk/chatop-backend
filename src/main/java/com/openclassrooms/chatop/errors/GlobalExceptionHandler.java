@@ -1,6 +1,6 @@
 package com.openclassrooms.chatop.errors;
 
-import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
+import com.openclassrooms.chatop.errors.exceptions.NotFoundException;
 import com.openclassrooms.chatop.errors.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(NotFoundException exception) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

@@ -2,8 +2,8 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.DBUserDTO;
 import com.openclassrooms.chatop.dtos.GetUserDTO;
-import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.errors.exceptions.UserAlreadyExistsException;
+import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBUser;
 import com.openclassrooms.chatop.repositories.DBRentalRepository;
 import com.openclassrooms.chatop.repositories.DBUserRepository;
@@ -46,7 +46,7 @@ public class UserService {
 
         DBUser user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new ResourceNotFoundException("User not found");
+            throw new UserNotFoundException("User" + user.getName() + "not found");
         }
 
         return modelMapper.map(user, GetUserDTO.class);
@@ -56,13 +56,13 @@ public class UserService {
 
         DBUser email = userRepository.findByEmail(userMail);
         if (email == null) {
-            throw new ResourceNotFoundException("User with email" + userMail + "not found");
+            throw new UserNotFoundException("User with email" + userMail + "not found");
         }
         return true;
     }
 
     public GetUserDTO getUserById(Integer id) {
-        DBUser user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + "not found"));
+        DBUser user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + "not found"));
         return modelMapper.map(user, GetUserDTO.class);
     }
 
