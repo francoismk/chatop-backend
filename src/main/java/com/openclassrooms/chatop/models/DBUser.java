@@ -22,7 +22,7 @@ public class DBUser {
     private String email;
 
     @Column(name = "name")
-    private String username;
+    private String name;
 
     @Column(name = "password")
     private String password;

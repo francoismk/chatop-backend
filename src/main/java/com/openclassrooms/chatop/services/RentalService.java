@@ -4,6 +4,7 @@ import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
+import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBRental;
 import com.openclassrooms.chatop.models.DBUser;
 import com.openclassrooms.chatop.repositories.DBRentalRepository;
@@ -37,18 +38,18 @@ public class RentalService {
     public void saveRental(DBRentalDTO rentalDTO) {
 
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = jwt.getSubject();
+        String email = jwt.getSubject();
 
-        DBUser user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new ResourceNotFoundException("User not found");
+        DBUser userMail = userRepository.findByEmail(email);
+        if (userMail == null) {
+            throw new UserNotFoundException("User with email" + email + "not found");
         }
 
         MultipartFile file = rentalDTO.getPicture();
         String imageUrl = cloudinaryService.uploadFile(file, "rentals");
 
         DBRental rental = modelMapper.map(rentalDTO, DBRental.class);
-        rental.setOwner(user);
+        rental.setOwner(userMail);
         rental.setPicture(imageUrl);
         rentalRepository.save(rental);
     }
@@ -67,7 +68,6 @@ public class RentalService {
     public GetRentalDTO getRentalById (Integer id) {
         DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental with id " + id + " not found"));
 
-        log.info("Rental found: " + rental);
         GetRentalDTO rentalDTO = modelMapper.map(rental, GetRentalDTO.class);
 
         rentalDTO.setUser_id(rental.getOwner().getId());
