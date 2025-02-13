@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DBRentalDTO {
 
     @NotNull(message = "name is required")
+    @Size(max = 255, message = "Value too long for name")
     private String name;
 
     @NotNull(message = "surface is required")
@@ -23,6 +25,7 @@ public class DBRentalDTO {
     private MultipartFile picture;
 
     @NotNull(message = "description is required")
+    @Size(max = 255, message = "Value too long for description")
     private String description;
 
 }
