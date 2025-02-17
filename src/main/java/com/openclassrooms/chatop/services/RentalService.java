@@ -59,7 +59,7 @@ public class RentalService {
         return rentals.stream()
                 .map(rental -> {
                 GetRentalDTO rentalDTO = modelMapper.map(rental, GetRentalDTO.class);
-                rentalDTO.setUser_id(rental.getOwner().getId());
+                rentalDTO.setOwner_id(rental.getOwner().getId());
                 return rentalDTO;
             }).toList();
     }
@@ -69,7 +69,7 @@ public class RentalService {
 
         GetRentalDTO rentalDTO = modelMapper.map(rental, GetRentalDTO.class);
 
-        rentalDTO.setUser_id(rental.getOwner().getId());
+        rentalDTO.setOwner_id(rental.getOwner().getId());
 
         return rentalDTO;
     }
