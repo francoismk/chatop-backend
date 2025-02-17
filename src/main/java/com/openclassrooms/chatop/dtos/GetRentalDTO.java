@@ -14,7 +14,7 @@ public class GetRentalDTO {
     private Integer price;
     private String picture;
     private String description;
-    private Integer user_id;
+    private Integer owner_id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private String created_at;

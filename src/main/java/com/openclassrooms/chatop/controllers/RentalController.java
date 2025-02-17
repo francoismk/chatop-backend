@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.controllers;
 
 import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
+import com.openclassrooms.chatop.dtos.RentalsResponseDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.services.RentalService;
 import jakarta.validation.Valid;
@@ -29,9 +30,9 @@ public class RentalController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<GetRentalDTO>> getRentals() {
+    public ResponseEntity<RentalsResponseDTO> getRentals() {
         List<GetRentalDTO> rentals = rentalService.getRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
+        return new ResponseEntity<>(new RentalsResponseDTO(rentals), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
