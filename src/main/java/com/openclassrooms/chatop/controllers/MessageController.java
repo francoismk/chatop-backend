@@ -3,6 +3,7 @@ package com.openclassrooms.chatop.controllers;
 import com.openclassrooms.chatop.dtos.DBMessageDTO;
 import com.openclassrooms.chatop.dtos.GetMessageDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
+import com.openclassrooms.chatop.dtos.MessageResponseDTO;
 import com.openclassrooms.chatop.services.MessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,12 @@ public class MessageController {
     }
 
     @PostMapping()
-    public ResponseEntity<Map<String, String>> createMessage(@RequestBody DBMessageDTO messageDTO) {
+    public ResponseEntity<MessageResponseDTO> createMessage(@RequestBody DBMessageDTO messageDTO) {
         if (messageDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         messageService.saveMessage(messageDTO);
-        return ResponseEntity.ok(Map.of("message", "Message created !"));
+        return new ResponseEntity(messageService.saveMessage(messageDTO), HttpStatus.CREATED);
     }
 
     @GetMapping()

@@ -1,6 +1,7 @@
 package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.DBUserDTO;
+import com.openclassrooms.chatop.dtos.JWTResponseDTO;
 import com.openclassrooms.chatop.dtos.LoginUserDTO;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,14 +22,14 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public String AuthenticateAndGenerateToken(LoginUserDTO userDTO) throws BadCredentialsException {
+    public JWTResponseDTO AuthenticateAndGenerateToken(LoginUserDTO userDTO) throws BadCredentialsException {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
 
         return jwtService.generateToken(authentication);
     }
 
-    public String registerAndGenerateToken(DBUserDTO userDTO) {
+    public JWTResponseDTO registerAndGenerateToken(DBUserDTO userDTO) {
         userService.createUser(userDTO);
         return jwtService.generateTokenFromEmail(userDTO.getEmail());
     }

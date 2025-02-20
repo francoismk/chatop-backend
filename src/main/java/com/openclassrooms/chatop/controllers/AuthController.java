@@ -1,5 +1,6 @@
 package com.openclassrooms.chatop.controllers;
 
+import com.openclassrooms.chatop.dtos.JWTResponseDTO;
 import com.openclassrooms.chatop.dtos.DBUserDTO;
 import com.openclassrooms.chatop.dtos.GetUserDTO;
 import com.openclassrooms.chatop.dtos.LoginUserDTO;
@@ -12,9 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -30,23 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>>createUser(@Valid @RequestBody DBUserDTO dbUserDTO) {
+    public ResponseEntity<JWTResponseDTO>createUser(@Valid @RequestBody DBUserDTO dbUserDTO) {
 
-        String token = authService.registerAndGenerateToken(dbUserDTO);
+        JWTResponseDTO token = authService.registerAndGenerateToken(dbUserDTO);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> getToken(@RequestBody LoginUserDTO request) {
+    public ResponseEntity<JWTResponseDTO> getToken(@RequestBody LoginUserDTO request) {
 
-            String token = authService.AuthenticateAndGenerateToken(request);
+        JWTResponseDTO token = authService.AuthenticateAndGenerateToken(request);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @GetMapping("/me")
