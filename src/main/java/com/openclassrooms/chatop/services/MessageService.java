@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.DBMessageDTO;
 import com.openclassrooms.chatop.dtos.GetMessageDTO;
+import com.openclassrooms.chatop.dtos.MessageResponseDTO;
 import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
 import com.openclassrooms.chatop.models.DBMessage;
@@ -32,12 +33,12 @@ public class MessageService {
         this.modelMapper = modelMapper;
     }
 
-    public void saveMessage(DBMessageDTO messageDTO) {
+    public MessageResponseDTO saveMessage(DBMessageDTO messageDTO) {
 
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = jwt.getSubject();
 
-        DBUser userMail = dbUserRepository.findByName(email);
+        DBUser userMail = dbUserRepository.findByEmail(email);
         if (userMail == null) {
             throw new UserNotFoundException("User with email" + email + "not found");
         }
@@ -51,6 +52,8 @@ public class MessageService {
         message.setUserId(userMail);
         message.setRentalId(rental);
         dbMessageRepository.save(message);
+
+        return new MessageResponseDTO("Message created !");
     }
 
     public List<GetMessageDTO> getAllMessages() {

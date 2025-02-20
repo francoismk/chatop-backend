@@ -1,12 +1,8 @@
 package com.openclassrooms.chatop.controllers;
 
-import com.openclassrooms.chatop.dtos.DBRentalDTO;
-import com.openclassrooms.chatop.dtos.GetRentalDTO;
-import com.openclassrooms.chatop.dtos.RentalsResponseDTO;
-import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
+import com.openclassrooms.chatop.dtos.*;
 import com.openclassrooms.chatop.services.RentalService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +20,14 @@ public class RentalController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> createRental(@Valid @ModelAttribute DBRentalDTO rentalDTO) {
-        rentalService.saveRental(rentalDTO);
-        return ResponseEntity.ok("Rental created !");
+    public ResponseEntity<RentalResponseDTO> createRental(@Valid @ModelAttribute DBRentalDTO rentalDTO) {
+        return ResponseEntity.ok(rentalService.saveRental(rentalDTO));
     }
 
     @GetMapping()
-    public ResponseEntity<RentalsResponseDTO> getRentals() {
+    public ResponseEntity<ListRentalsResponseDTO> getRentals() {
         List<GetRentalDTO> rentals = rentalService.getRentals();
-        return new ResponseEntity<>(new RentalsResponseDTO(rentals), HttpStatus.OK);
+        return new ResponseEntity<>(new ListRentalsResponseDTO(rentals), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -42,8 +37,7 @@ public class RentalController {
     }
 
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<String> updateRentalById(@PathVariable Integer id, @Valid @ModelAttribute UpdateRentalDTO updateRentalDTO) {
-        rentalService.updateRentalById(id, updateRentalDTO);
-        return ResponseEntity.ok("Rental updated !");
+    public ResponseEntity<RentalResponseDTO> updateRentalById(@PathVariable Integer id, @Valid @ModelAttribute UpdateRentalDTO updateRentalDTO) {
+        return ResponseEntity.ok(rentalService.updateRentalById(id, updateRentalDTO));
     }
 }

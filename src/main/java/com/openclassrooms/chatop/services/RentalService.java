@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.DBRentalDTO;
 import com.openclassrooms.chatop.dtos.GetRentalDTO;
+import com.openclassrooms.chatop.dtos.RentalResponseDTO;
 import com.openclassrooms.chatop.dtos.UpdateRentalDTO;
 import com.openclassrooms.chatop.errors.exceptions.ResourceNotFoundException;
 import com.openclassrooms.chatop.errors.exceptions.UserNotFoundException;
@@ -34,7 +35,7 @@ public class RentalService {
         this.cloudinaryService = cloudinaryService;
     }
 
-    public void saveRental(DBRentalDTO rentalDTO) {
+    public RentalResponseDTO saveRental(DBRentalDTO rentalDTO) {
 
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = jwt.getSubject();
@@ -51,6 +52,8 @@ public class RentalService {
         rental.setOwner(userMail);
         rental.setPicture(imageUrl);
         rentalRepository.save(rental);
+
+        return new RentalResponseDTO("Rental created !");
     }
 
     public List<GetRentalDTO> getRentals () {
@@ -74,7 +77,7 @@ public class RentalService {
         return rentalDTO;
     }
 
-    public DBRental updateRentalById(Integer id, UpdateRentalDTO updateRentalDto) {
+    public RentalResponseDTO updateRentalById(Integer id, UpdateRentalDTO updateRentalDto) {
         DBRental rental = rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental with id " + id + " not found"));
 
         if (updateRentalDto.getName() != null) {
@@ -101,6 +104,8 @@ public class RentalService {
             rental.setDescription(updateRentalDto.getDescription());
         }
 
-        return rentalRepository.save(rental);
+        rentalRepository.save(rental);
+
+        return new RentalResponseDTO("Rental updated !");
     }
 }

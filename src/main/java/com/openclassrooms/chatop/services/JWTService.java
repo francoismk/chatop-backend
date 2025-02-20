@@ -1,5 +1,6 @@
 package com.openclassrooms.chatop.services;
 
+import com.openclassrooms.chatop.dtos.JWTResponseDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -20,7 +21,7 @@ public class JWTService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String generateToken(Authentication authentication) {
+    public JWTResponseDTO generateToken(Authentication authentication) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -31,10 +32,11 @@ public class JWTService {
 
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        String token =  this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        return new JWTResponseDTO(token);
     }
 
-    public String generateTokenFromEmail(String email) {
+    public JWTResponseDTO generateTokenFromEmail(String email) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -45,6 +47,7 @@ public class JWTService {
 
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        String token =  this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        return new JWTResponseDTO(token);
     }
 }

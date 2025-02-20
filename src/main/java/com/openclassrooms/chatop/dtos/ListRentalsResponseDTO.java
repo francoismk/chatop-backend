@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class RentalsResponseDTO {
+public class ListRentalsResponseDTO {
 
     private List<GetRentalDTO> rentals;
 }
